@@ -1,0 +1,18 @@
+{
+  "path-intellisense.showHiddenFiles": true,
+  "explorer.compactFolders": false,
+  "files.exclude": {
+    "**/.git": false
+  },
+
+  "vscode-pets.theme": "beach",
+  "vscode-pets.petColor": "white",
+  "vscode-pets.petSize": "small",
+  "vscode-pets.throwBallWithMouse": true,
+
+  "notebook.formatOnSave.enabled": true,
+  "notebook.defaultFormatter": "esbenp.prettier-vscode",
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+}
