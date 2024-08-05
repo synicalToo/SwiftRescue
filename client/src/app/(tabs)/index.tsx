@@ -1,35 +1,32 @@
-import { StyleSheet } from "react-native";
+import React from 'react';
+import { View, Text, Button, ActivityIndicator, StyleSheet } from 'react-native';
+import usePost from '@hooks/usePost';
 
-import EditScreenInfo from "@components/EditScreenInfo";
-import { Text, View } from "@components/Themed";
+const TabOneScreen = () => {
+  const { data, errorMsg, loading, postData } = usePost('/api/v1/detect');
 
-export default function TabOneScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <Button title="Fetch Data" onPress={() => postData({ "area": "Ang Mo Kio" })} />
+      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      {errorMsg ? (
+        <Text style={styles.error}>{errorMsg}</Text>
+      ) : (
+        <Text>{data ? data.message : 'No data'}</Text>
+      )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  error: {
+    color: 'red',
   },
 });
+
+export default TabOneScreen;
