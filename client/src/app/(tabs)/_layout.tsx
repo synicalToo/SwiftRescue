@@ -14,6 +14,13 @@ export default function TabLayout() {
           title: "Dashboard"
         }}
       />
+      <Tabs.Screen
+        name="fire-detection"
+        options={{
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
+        }}
+      />
     </Tabs>
   );
 }

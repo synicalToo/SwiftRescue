@@ -11,10 +11,11 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 def detect():
     data = request.json
 
-    area = data.get("area")
-    print(area)
+    image = data.get("image")
+    location = data.get("location")
+    print(location)
 
-    return jsonify({"message": "Hello, World!"})
+    return jsonify({"message": "This is a test response"})
 
 
 if __name__ == "__main__":

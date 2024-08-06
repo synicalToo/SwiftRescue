@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Button, ActivityIndicator, StyleSheet } from 'react-native';
 import usePost from '@hooks/usePost';
 
-const TabOneScreen = () => {
+export default function TabIndex() {
   const { data, errorMsg, loading, postData } = usePost('/api/v1/detect');
 
   return (
@@ -17,5 +17,3 @@ const TabOneScreen = () => {
     </View>
   );
 };
-
-export default TabOneScreen;
