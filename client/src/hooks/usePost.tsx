@@ -1,13 +1,13 @@
 import { useState, useCallback } from "react";
 import { BASE_URL } from "@/services/APIConfig";
 
-interface ApiResponse {
+interface APIResponseProps {
   message: string;
 }
 
 export default function usePost(endpoint: string) {
-  const [data, setData] = useState<ApiResponse | null>(null);
-  const [errorMsg, setErrorMsg] = useState<String>("");
+  const [data, setData] = useState<APIResponseProps | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const postData = useCallback(async (body: any) => {
