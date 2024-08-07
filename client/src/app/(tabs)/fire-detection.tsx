@@ -1,16 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
-import { View, Text, Button, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import usePost from '@hooks/usePost';
 import { useRouter } from 'expo-router';
-import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Location from 'expo-location';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useRef, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
+import { View, Text, Button, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 
 export default function TabFireDetection() {
   const router = useRouter();
   const cameraRef = useRef<CameraView>(null);
-  const [facing, setFacing] = useState<CameraType>('back')
+  const [processing, setProcessing] = useState(true);
+  const [facing, setFacing] = useState<CameraType>('back');
   const [hasPermission, requestPermission] = useCameraPermissions();
   const { data, errorMsg, loading, postData } = usePost('/api/v1/detect');
 
@@ -20,22 +22,38 @@ export default function TabFireDetection() {
     exif: true,
   }
 
+  // Foreground location for user when using the app
+  useEffect(() => {
+    (async () => {
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert("Request Permission", "We need your location to use this feature")
+        return;
+      };
+    })();
+  }, []);
+
+  // shows alert when an error message is changed
   useEffect(() => {
     if (errorMsg) {
       Alert.alert("An error has occured", errorMsg);
     }
   }, [errorMsg])
 
+  // shows the message when the server returns a response
   useEffect(() => {
     if (data) {
       Alert.alert("Fire detection AI", data.message);
     }
   }, [data])
 
+  // camera persmission still loading
   if (!hasPermission) {
     return <View />;
   }
 
+  // camera permission not granted by user
   if (!hasPermission.granted) {
     return (
       <View className='flex-1 justify-center'>
@@ -45,15 +63,22 @@ export default function TabFireDetection() {
     );
   }
 
+  // bring user back to dashboard
   function onCloseButtonPress() {
     router.replace("/");
   }
 
+  // take picture when user press shuttle button
   async function onShuttlePress() {
-    if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync(cameraOptions);
+    if (cameraRef.current && !loading && !processing) {
+      setProcessing(true);
 
-      postData({ image: photo?.base64, location: { lat: 1.424710, long: 103.852120 } })
+      const photo = await cameraRef.current.takePictureAsync(cameraOptions);
+      let userLocation = await Location.getCurrentPositionAsync({});
+
+      postData({ image: photo?.base64, location: userLocation })
+
+      setProcessing(false);
     }
   }
 
@@ -67,7 +92,7 @@ export default function TabFireDetection() {
             </TouchableOpacity>
           </View>
 
-          {loading && <ActivityIndicator className='flex-1 justify-center items-center' size="large" color="#FFFFFF" />}
+          {loading || processing && <ActivityIndicator className='flex-1 justify-center items-center' size="large" color="#FFFFFF" />}
 
           <View className='flex-1 items-center flex-col-reverse pb-5'>
             <TouchableOpacity onPress={onShuttlePress}>
