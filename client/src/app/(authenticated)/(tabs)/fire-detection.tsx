@@ -65,7 +65,7 @@ export default function TabFireDetection() {
 
   // bring user back to dashboard
   function onCloseButtonPress() {
-    router.replace("/");
+    router.replace("/dashboard");
   }
 
   // take picture when user press shuttle button

@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 
-export default function TabLayout() {
+export default function Layout() {
 
   return (
     <Tabs
@@ -9,13 +9,20 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="dashboard"
         options={{
           title: "Dashboard"
         }}
       />
       <Tabs.Screen
         name="fire-detection"
+        options={{
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
+        }}
+      />
+      <Tabs.Screen
+        name="screens"
         options={{
           headerShown: false,
           tabBarStyle: { display: 'none' },

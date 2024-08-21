@@ -1,31 +1,27 @@
 import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
+    DarkTheme,
+    DefaultTheme,
+    ThemeProvider,
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
-  return (
-    <SafeAreaProvider>
-      <RootNavigation />
+    return (
+        <SafeAreaProvider>
+            <RootNavigation />
 
-      <StatusBar style="light" />
-    </SafeAreaProvider>
-  );
+            <StatusBar style="light" />
+        </SafeAreaProvider>
+    );
 }
 
 const RootNavigation = () => {
-
-  return (
-    <ThemeProvider value={DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{
-          headerShown: false
-        }} />
-      </Stack>
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider value={DefaultTheme}>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
+        </ThemeProvider>
+    );
 }

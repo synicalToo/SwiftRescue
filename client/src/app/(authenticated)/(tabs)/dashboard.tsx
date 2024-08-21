@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Button, ActivityIndicator, StyleSheet } from 'react-native';
 import usePost from '@hooks/usePost';
 
-export default function TabIndex() {
+export default function Page() {
   const { data, errorMsg, loading, postData } = usePost('/api/v1/detect');
 
   return (
