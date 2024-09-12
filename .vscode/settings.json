@@ -10,6 +10,9 @@
   "vscode-pets.petSize": "small",
   "vscode-pets.throwBallWithMouse": true,
 
+  "workbench.colorTheme": "GitHub Dark",
+  "workbench.iconTheme": "vscode-icons",
+
   "notebook.formatOnSave.enabled": true,
   "notebook.defaultFormatter": "esbenp.prettier-vscode",
 

@@ -10,6 +10,9 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 geolocator = Nominatim(user_agent="SwiftRescue")
 
+@app.route("/api/v1/testFetchData", methods=["GET"])
+def fetch():
+    return jsonify({"message": "Hello, successfully return message."})
 
 @app.route("/api/v1/detect", methods=["POST"])
 def detect():
