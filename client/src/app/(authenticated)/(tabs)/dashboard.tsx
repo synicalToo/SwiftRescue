@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   TouchableOpacity,
   Animated,
   Easing,
@@ -18,8 +17,8 @@ import AEDLocs from "../screens/aed-locations";
 import HelpNeeded from "../screens/helpneeded";
 import SOS from "../screens/sos";
 import SOSStatus from "../screens/sosstatus";
-import { SimpleLineIcons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Entypo from '@expo/vector-icons/Entypo';
 
 type RootStackParamList = {
   Home: undefined;
@@ -34,125 +33,125 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 function Index({ navigation }: { navigation: HomeScreenNavigationProp }) {
-  const scaleAnim = useRef(new Animated.Value(1)).current; //こっから
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
   useEffect(() => {
     const animate = () => {
-      scaleAnim.setValue(1); // 初期化
+      scaleAnim.setValue(1);
       Animated.sequence([
         Animated.timing(scaleAnim, {
-          toValue: 1.1, // または変更した値
+          toValue: 1.1,
           duration: 500,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
         Animated.timing(scaleAnim, {
-          toValue: 1.2,
+          toValue: 1.1,
           duration: 500,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
-      ]).start(() => animate()); // 繰り返し
+      ]).start(() => animate());
     };
 
-    animate(); // アニメーションを開始
+    animate();
   }, [scaleAnim]);
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.background}>
       <View style={styles.flexBox}>
-        <View style={styles.box}>
-          <TouchableOpacity
-            style={styles.buttonWrapper}
-            onPress={() => navigation.navigate("AEDLocs")}
-          >
-            <MaterialIcons
-              name="monitor-heart"
-              size={20}
-              color="red"
-              style={styles.icon}
-            />
-            <Text style={styles.iconText}>AED</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.box}>
-          <TouchableOpacity
-            style={styles.buttonWrapper}
-            onPress={() => navigation.navigate("HelpNeeded")}
-          >
-            <SimpleLineIcons
-              name="location-pin"
-              size={20}
-              color="black"
-              style={styles.icon}
-            />
-            <Text style={styles.iconText}>LOCATION</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={() => navigation.navigate("AEDLocs")}
+        >
+          <MaterialCommunityIcons
+            name="heart-flash"
+            size={40}
+            color="white"
+            style={styles.icon}
+          />
+          <Text style={styles.iconText}>Locate AED</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={() => navigation.navigate("HelpNeeded")}
+        >
+          <Entypo
+            name="location"
+            size={40}
+            color="white"
+            style={styles.icon}
+          />
+          <Text style={styles.iconText}>Need Help</Text>
+        </TouchableOpacity>
       </View>
-      <View style={styles.requestSOS}>
+
+      <Animated.View style={[styles.requestSOS, { transform: [{ scale: scaleAnim }] }]}>
         <TouchableOpacity onPress={() => navigation.navigate("SOS")}>
           <Animated.Text
             style={[styles.sosText, { transform: [{ scale: scaleAnim }] }]}
           >
-            SOS
+            {'EMERGENCY'}{"\n"}
+            {'SOS'}
           </Animated.Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  requestSOS: {
-    backgroundColor: "white",
-    display: "flex",
-    width: "100%",
-    height: "50%",
+  background: {
+    backgroundColor: "#f0f0f5", // 明るいグレーで背景を落ち着かせる
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,
     alignItems: "center",
+  },
+  requestSOS: {
+    marginTop: 50,
+    alignItems: "center",
+    backgroundColor: "red",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5, // Androidのための影
   },
   sosText: {
     textAlign: "center",
-    marginTop: 100,
-    borderWidth: 3,
-    borderColor: "red",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    fontSize: 60,
-    color: "red",
-    borderRadius: "20%",
-    fontWeight: "bold",
+    fontSize: 35, // 少しサイズを調整
+    color: "white",
   },
   flexBox: {
-    paddingHorizontal: 30,
-    paddingVertical: 100,
-    display: "flex",
     flexDirection: "row",
-    gap: "20px",
-    backgroundColor: "blue",
-    alignItems: "center",
-    textAlign: "center",
-    justifyContent: "center",
-  },
-  box: {
-    width: "50%",
+    justifyContent: "space-around",
+    marginBottom: 30,
+    gap: 20,
   },
   buttonWrapper: {
-    display: "flex",
-    textAlign: "center",
+    backgroundColor: "#4a90e2", // 鮮やかな青色
+    padding: 20,
+    borderRadius: 10,
     alignItems: "center",
-    borderWidth: 5, // 枠線を追加
-    borderColor: "black", // 枠線の色
-    padding: 10,
-    gap: 5, // 内側の余白
-    backgroundColor: "white", // 背景色
-    borderRadius: "20%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5,
+    width: "40%",
   },
   iconText: {
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 18,
+    fontWeight: "600",
+    color: "white",
+    marginTop: 10,
   },
   icon: {
-    fontSize: 60,
+    fontSize: 40,
   },
 });
 
@@ -163,7 +162,7 @@ export default function ButtonNavigation() {
     <Stack.Navigator initialRouteName="Index">
       <Stack.Screen name="Home" component={Index} />
       <Stack.Screen
-        name="AEDLocs" // Define AedLocs screen
+        name="AEDLocs"
         component={AEDLocs}
         options={{ title: "AED Locations" }}
       />
@@ -177,10 +176,7 @@ export default function ButtonNavigation() {
         component={SOS}
         options={{ title: "Send SOS signal" }}
       />
-      <Stack.Screen
-        name="SOSStatus" // for redirection at HN
-        component={SOSStatus}
-      />
+      <Stack.Screen name="SOSStatus" component={SOSStatus} />
     </Stack.Navigator>
   );
 }
