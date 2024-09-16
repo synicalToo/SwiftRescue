@@ -147,9 +147,10 @@ const AEDLocs: React.FC = () => {
       postData({ image: base64 }); // Call postData with image data
 
       if (data) {
-        if (data.message === "AED detected") {
+        if (data.message == "AED detected") {
           if (userLocation) {
             const exists = await checkIfAedExists(userLocation.latitude, userLocation.longitude);
+
             if (exists) {
               setErrorMessage('AED already registered at this location.');
             } else {
@@ -160,71 +161,69 @@ const AEDLocs: React.FC = () => {
               });
               fetchAedLocations();
             }
+          } else {
+            setErrorMessage(data.message || 'Unknown error from server');
           }
         } else {
-          // Handle other message types or errors from the server
-          setErrorMessage(data.message || 'Unknown error from server');
+          setErrorMessage('Error receiving response from server');
         }
       } else {
-        // Handle case where data is null (potentially loading or error)
-        setErrorMessage('Error receiving response from server');
+        Alert.alert("An error has occured", errorMsg);
       }
-    } else {
-      Alert.alert("An error has occured", errorMsg);
+
+    } catch (error) {
+      console.error('Failed to send image to server:', error);
+      setErrorMessage('Failed to send image to server.');
     }
-  } catch (error) {
-    console.error('Failed to send image to server:', error);
-    setErrorMessage('Failed to send image to server.');
   }
-};
 
-useEffect(() => {
-  const initialize = async () => {
-    await getUserLocation();
-  };
-  initialize();
-}, []);
+  useEffect(() => {
+    const initialize = async () => {
+      await getUserLocation();
+    };
+    initialize();
+  }, []);
 
-useEffect(() => {
-  if (userLocation) {
-    fetchAedLocations();
+  useEffect(() => {
+    if (userLocation) {
+      fetchAedLocations();
+    }
+  }, [userLocation]);
+
+  if (errorMessage) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.text}>{errorMessage}</Text>
+      </SafeAreaView>
+    );
   }
-}, [userLocation]);
 
-if (errorMessage) {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>{errorMessage}</Text>
+      <Button title="Register AED" color="red" onPress={pickImage} />
+      {userLocation && (
+        <MapView
+          style={styles.map}
+          region={{
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+          showsUserLocation={true}
+        >
+          {nearestAed && (
+            <Marker
+              coordinate={{ latitude: nearestAed.latitude, longitude: nearestAed.longitude }}
+              title={nearestAEDName}
+              description="Nearest AED"
+            />
+          )}
+        </MapView>
+      )}
     </SafeAreaView>
   );
 }
-
-return (
-  <SafeAreaView style={styles.container}>
-    <Button title="Register AED" color="red" onPress={pickImage} />
-    {userLocation && (
-      <MapView
-        style={styles.map}
-        region={{
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        }}
-        showsUserLocation={true}
-      >
-        {nearestAed && (
-          <Marker
-            coordinate={{ latitude: nearestAed.latitude, longitude: nearestAed.longitude }}
-            title={nearestAEDName}
-            description="Nearest AED"
-          />
-        )}
-      </MapView>
-    )}
-  </SafeAreaView>
-);
-};
 
 const styles = StyleSheet.create({
   container: {

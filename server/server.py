@@ -58,28 +58,6 @@ def pose_detection() -> None:
     
     return jsonify({"message": "Landmark detection successful.", "processed_image": output_image})
 
-aed_model = YOLO("./aed_ai/runs/detect/train2/weights/best.pt")
-
-@app.route("/aed_detection", methods=["POST"])
-def upload_aed_image():
-    try:
-        data = request.json
-
-        image_data_base64 = data.get("image")
-        image_data_binary = base64.b64decode(image_data_base64)
-
-        results = aed_model.predict(
-            source=image_data_binary, save=True, conf=0.65
-        )
-        result = results[0]
-
-        if result:
-            return jsonify({"message": "AED detected"}), 200
-        else:
-            return jsonify({"message": "No AED detected"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)})
-
 if __name__ == "__main__":
     create_directories()
     socketio.run(app, debug=True, port=5000, host="0.0.0.0")
