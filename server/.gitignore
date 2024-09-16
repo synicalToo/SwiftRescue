@@ -1,2 +1,7 @@
 # virtual environment
-.venv/
+.venv
+
+# IDK WHAT IS THIS
+__pycache__
+
+processed_image/*

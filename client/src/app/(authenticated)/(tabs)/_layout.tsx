@@ -24,6 +24,14 @@ export default function Layout() {
           tabBarIcon: ({ color }) => <Ionicons size={28} name="camera-outline" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="pose-detection"
+        options={{
+          headerShown: false,
+          tabBarStyle: { display: "none" },
+          tabBarIcon: ({ color }) => <Ionicons size={28} name="camera-outline" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }

@@ -3,6 +3,7 @@ import { BASE_URL } from "@/services/APIConfig";
 
 interface APIResponseProps {
   message: string;
+  processed_image?: string;
 }
 
 export default function usePost(endpoint: string) {

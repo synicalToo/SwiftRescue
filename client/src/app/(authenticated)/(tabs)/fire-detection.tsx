@@ -22,7 +22,7 @@ export default function Page() {
   const [processing, setProcessing] = useState(false);
   const [facing, setFacing] = useState<CameraType>("back");
   const [hasPermission, requestPermission] = useCameraPermissions();
-  const { data, errorMsg, loading, postData } = usePost("/api/v1/detect");
+  const { data, errorMsg, loading, postData } = usePost("/api/v1/fire-detection");
 
   let cameraOptions = {
     quality: 1,
@@ -83,7 +83,7 @@ export default function Page() {
     if (cameraRef.current) {
       try {
         await cameraRef.current.pausePreview;
-      } catch (error) {}
+      } catch (error) { }
     }
     router.replace("/(authenticated)/(tabs)/dashboard");
   }
