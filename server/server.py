@@ -31,7 +31,7 @@ def fire_detection():
 
     return jsonify({"message": f"Your current location: {retrieved_location}"})
 
-@app.route("/api/v1/pose-detection", methods=["POST"])
+@app.route("/api/v1/CPR", methods=["POST"])
 def pose_detection():
     data = request.json
     

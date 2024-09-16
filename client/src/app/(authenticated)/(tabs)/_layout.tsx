@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 
 export default function Layout() {
   return (
@@ -25,11 +25,11 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="pose-detection"
+        name="CPR"
         options={{
           headerShown: false,
           tabBarStyle: { display: "none" },
-          tabBarIcon: ({ color }) => <Ionicons size={28} name="camera-outline" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome6 size={28} name="heart-pulse" color={"red"} />,
         }}
       />
     </Tabs>
