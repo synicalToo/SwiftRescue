@@ -1,7 +1,12 @@
+.env
+
 # virtual environment
 .venv
 
 # IDK WHAT IS THIS
 __pycache__
 
-processed_image/*
+# ai things
+uploads/**/*.{.jpg,.png}
+
+computer-vision/**/runs

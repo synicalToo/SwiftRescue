@@ -22,7 +22,7 @@ const AEDLocs: React.FC = () => {
   const [nearestAed, setNearestAed] = useState<AEDLocation | null>(null);
   const [nearestAEDName, setNearestAEDName] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { data, errorMsg, loading, postData } = usePost("/api/v1/aed_detection");
+  const { data, errorMsg, loading, postData } = usePost('/api/v1/aed-detection');
 
   const getUserLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -82,13 +82,13 @@ const AEDLocs: React.FC = () => {
               lon: coords.longitude.toString(),
               format: 'json',
             });
-      
+
             const response = await fetch(`${NOMINATIM_API_URL}?${params.toString()}`);
-      
+
             if (!response.ok) {
               throw new Error(`Geocoding API request failed with status: ${response.status}`);
             }
-      
+
             const data = await response.json();
             if (data && data.address) {
               const { house_number, road, postcode } = data.address;
@@ -144,8 +144,8 @@ const AEDLocs: React.FC = () => {
   const sendImageToServer = async (base64: string) => {
     try {
       console.log("Sending image to server for AED detection");
-      const response = postData({ image: base64 }); // Call postData with image data
-      if (!errorMsg) {
+      postData({ image: base64 }); // Call postData with image data
+
       if (data) {
         if (data.message === "AED detected") {
           if (userLocation) {
@@ -169,61 +169,61 @@ const AEDLocs: React.FC = () => {
         // Handle case where data is null (potentially loading or error)
         setErrorMessage('Error receiving response from server');
       }
-      } else {
-        Alert.alert("An error has occured", errorMsg);
-      }
-    } catch (error) {
-      console.error('Failed to send image to server:', error);
-      setErrorMessage('Failed to send image to server.');
+    } else {
+      Alert.alert("An error has occured", errorMsg);
     }
-  };
-
-  useEffect(() => {
-    const initialize = async () => {
-      await getUserLocation();
-    };
-    initialize();
-  }, []);
-
-  useEffect(() => {
-    if (userLocation) {
-      fetchAedLocations();
-    }
-  }, [userLocation]);
-
-  if (errorMessage) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.text}>{errorMessage}</Text>
-      </SafeAreaView>
-    );
+  } catch (error) {
+    console.error('Failed to send image to server:', error);
+    setErrorMessage('Failed to send image to server.');
   }
+};
 
+useEffect(() => {
+  const initialize = async () => {
+    await getUserLocation();
+  };
+  initialize();
+}, []);
+
+useEffect(() => {
+  if (userLocation) {
+    fetchAedLocations();
+  }
+}, [userLocation]);
+
+if (errorMessage) {
   return (
     <SafeAreaView style={styles.container}>
-      <Button title="Register AED" color="red" onPress={pickImage} />
-      {userLocation && (
-        <MapView
-          style={styles.map}
-          region={{
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}
-          showsUserLocation={true}
-        >
-          {nearestAed && (
-            <Marker
-              coordinate={{ latitude: nearestAed.latitude, longitude: nearestAed.longitude }}
-              title={nearestAEDName}
-              description="Nearest AED"
-            />
-          )}
-        </MapView>
-      )}
+      <Text style={styles.text}>{errorMessage}</Text>
     </SafeAreaView>
   );
+}
+
+return (
+  <SafeAreaView style={styles.container}>
+    <Button title="Register AED" color="red" onPress={pickImage} />
+    {userLocation && (
+      <MapView
+        style={styles.map}
+        region={{
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+        showsUserLocation={true}
+      >
+        {nearestAed && (
+          <Marker
+            coordinate={{ latitude: nearestAed.latitude, longitude: nearestAed.longitude }}
+            title={nearestAEDName}
+            description="Nearest AED"
+          />
+        )}
+      </MapView>
+    )}
+  </SafeAreaView>
+);
 };
 
 const styles = StyleSheet.create({
