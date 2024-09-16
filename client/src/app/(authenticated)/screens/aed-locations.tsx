@@ -22,7 +22,7 @@ const AEDLocs: React.FC = () => {
   const [nearestAed, setNearestAed] = useState<AEDLocation | null>(null);
   const [nearestAEDName, setNearestAEDName] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { data, errorMsg, loading, postData } = usePost('/api/v1/aed_detection');
+  const { data, errorMsg, loading, postData } = usePost("/api/v1/aed_detection");
 
   const getUserLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -102,7 +102,6 @@ const AEDLocs: React.FC = () => {
             Alert.alert('Error', 'Failed to fetch location name. Please try again.');
           }
         };
-
         await fetchLocationName(nearestAed);
         setNearestAed(nearestAed);
       }
@@ -145,11 +144,10 @@ const AEDLocs: React.FC = () => {
   const sendImageToServer = async (base64: string) => {
     try {
       console.log("Sending image to server for AED detection");
-      postData({ image: base64 }); // Call postData with image data
-  
+      const response = postData({ image: base64 }); // Call postData with image data
+      if (!errorMsg) {
       if (data) {
-        if (data.message === 'AED detected') {
-          // Handle case where AED is detected
+        if (data.message === "AED detected") {
           if (userLocation) {
             const exists = await checkIfAedExists(userLocation.latitude, userLocation.longitude);
             if (exists) {
@@ -160,7 +158,6 @@ const AEDLocs: React.FC = () => {
                 longitude: userLocation.longitude,
                 name: nearestAEDName,
               });
-  
               fetchAedLocations();
             }
           }
@@ -171,6 +168,9 @@ const AEDLocs: React.FC = () => {
       } else {
         // Handle case where data is null (potentially loading or error)
         setErrorMessage('Error receiving response from server');
+      }
+      } else {
+        Alert.alert("An error has occured", errorMsg);
       }
     } catch (error) {
       console.error('Failed to send image to server:', error);
