@@ -15,9 +15,10 @@ export default function App() {
   const [sound, setSound] = useState<Audio.Sound | null>(null);
 
   const audioFiles: { [key: string]: any } = {
-    'kneel.mp3': require('../../assets/audio/kneel.mp3'),
-    'straighten_arms.mp3': require('../../assets/audio/straighten_arms.mp3'),
-    'correct.mp3': require('../../assets/audio/correct.mp3'),
+    'move_forward.mp3': require('../../../assets/audio/move_forward.mp3'),
+    'move_backward.mp3': require('../../../assets/audio/move_backward.mp3'),
+    'straighten_elbow.mp3': require('../../../assets/audio/straighten_elbow.mp3'),
+    'correct.mp3': require('../../../assets/audio/correct.mp3'),
   };
 
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function App() {
         if (photo && photo.base64) {
           console.log("Captured image base64 length:", photo.base64.length);
           // Send the base64 image data to your Flask server
-          const response = await fetch("https://2ba3-203-127-47-51.ngrok-free.app/video_feed", {
+          const response = await fetch("https://127.0.0.1:5000/api/v1/pose-detection", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -84,10 +85,12 @@ export default function App() {
               setCapturedImage(`data:image/jpeg;base64,${responseData.image}`);
             }
             if (responseData.elbow) {
-              playSound('straighten_.mp3');
+              playSound('straighten_elbow.mp3');
             } else if (responseData.backward) {
               playSound('move_backward.mp3');
-            } else {
+            } else if(responseData.forward){ 
+              playSound('move_forward.mp3');
+            } else{
               playSound('correct.mp3');
             }
           } catch (error) {
