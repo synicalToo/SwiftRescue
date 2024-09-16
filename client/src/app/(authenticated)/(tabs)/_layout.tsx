@@ -1,5 +1,7 @@
 import { Tabs } from "expo-router";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function Layout() {
   return (
