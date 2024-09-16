@@ -25,10 +25,6 @@ def save_base64_image(base64_string: str):
     # Decode base64 string
     img_data = base64.b64decode(base64_string)
 
-    # Create directory if it doesn't exist
-    if not os.path.exists("processed_image"):
-        os.makedirs("processed_image")
-
     # Generate filename with timestamp
     timestamp = round(time.time())
     file_path = os.path.join("processed_image", f"{timestamp}.png")

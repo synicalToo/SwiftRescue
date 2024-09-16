@@ -58,19 +58,21 @@ export default function LiveStreamingScreen() {
     return (
         <View style={{ flex: 1 }}>
             {/* Conditionally render CameraView or the image from server */}
-            {serverImage ? (
+            {/* {serverImage ? (
                 <Image
                     style={{ flex: 1 }}
                     source={{ uri: serverImage }} // Display server image
                     resizeMode="contain"
                 />
             ) : (
-                <CameraView
-                    style={{ flex: 1 }}
-                    ref={cameraRef}
-                    onCameraReady={() => setCameraReady(true)}
-                />
-            )}
+            )} */}
+
+            <CameraView
+                style={{ flex: 1 }}
+                ref={cameraRef}
+                onCameraReady={() => setCameraReady(true)}
+            />
+
             <View style={styles.buttonContainer}>
                 <Button title="Start Streaming" onPress={startStreaming} />
                 <Button title="Stop Streaming" onPress={stopStreaming} />

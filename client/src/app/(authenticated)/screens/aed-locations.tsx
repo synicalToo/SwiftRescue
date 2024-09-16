@@ -22,7 +22,7 @@ const AEDLocs: React.FC = () => {
   const [nearestAed, setNearestAed] = useState<AEDLocation | null>(null);
   const [nearestAEDName, setNearestAEDName] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { data, errorMsg, loading, postData } = usePost("/api/v1/aed_detection");
+  const { data, errorMsg, loading, postData } = usePost('/api/v1/aed-detection');
 
   const getUserLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -82,13 +82,13 @@ const AEDLocs: React.FC = () => {
               lon: coords.longitude.toString(),
               format: 'json',
             });
-      
+
             const response = await fetch(`${NOMINATIM_API_URL}?${params.toString()}`);
-      
+
             if (!response.ok) {
               throw new Error(`Geocoding API request failed with status: ${response.status}`);
             }
-      
+
             const data = await response.json();
             if (data && data.address) {
               const { house_number, road, postcode } = data.address;
@@ -144,12 +144,13 @@ const AEDLocs: React.FC = () => {
   const sendImageToServer = async (base64: string) => {
     try {
       console.log("Sending image to server for AED detection");
-      const response = postData({ image: base64 }); // Call postData with image data
-      if (!errorMsg) {
+      postData({ image: base64 }); // Call postData with image data
+
       if (data) {
-        if (data.message === "AED detected") {
+        if (data.message == "AED detected") {
           if (userLocation) {
             const exists = await checkIfAedExists(userLocation.latitude, userLocation.longitude);
+
             if (exists) {
               setErrorMessage('AED already registered at this location.');
             } else {
@@ -160,23 +161,21 @@ const AEDLocs: React.FC = () => {
               });
               fetchAedLocations();
             }
+          } else {
+            setErrorMessage(data.message || 'Unknown error from server');
           }
         } else {
-          // Handle other message types or errors from the server
-          setErrorMessage(data.message || 'Unknown error from server');
+          setErrorMessage('Error receiving response from server');
         }
-      } else {
-        // Handle case where data is null (potentially loading or error)
-        setErrorMessage('Error receiving response from server');
-      }
       } else {
         Alert.alert("An error has occured", errorMsg);
       }
+
     } catch (error) {
       console.error('Failed to send image to server:', error);
       setErrorMessage('Failed to send image to server.');
     }
-  };
+  }
 
   useEffect(() => {
     const initialize = async () => {
@@ -224,7 +223,7 @@ const AEDLocs: React.FC = () => {
       )}
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
