@@ -33,6 +33,7 @@ class PoseEstimator:
     def process_image(self, image):
         """Process the input image and return it with pose landmarks and feedback"""
         image = base64_to_cv2_image(image)
+        elbow,forward,backward=False
 
         if image is None:
             print("Error: Image conversion failed.")
@@ -149,16 +150,22 @@ class PoseEstimator:
             feedback = []
             if left_elbow_angle <= 150:
                 feedback.append("Don't bend your left elbow")
+                elbow=True
             if left_knee_angle <= 40:
                 feedback.append("Move forward")
+                forward=True
             if left_knee_angle >= 70:
                 feedback.append("Move backward")
+                backward=True
             if right_elbow_angle <= 150:
                 feedback.append("Don't bend your right elbow")
+                elbow=True
             if right_knee_angle <= 40:
                 feedback.append("Move forward")
+                forward=True
             if right_knee_angle > 70:
                 feedback.append("Move backward")
+                backward=True
             # Visualize angles and provide feedback
             feedback = []
             if left_elbow_angle <= 150:
@@ -204,4 +211,4 @@ class PoseEstimator:
             print("Error: Image encoding failed.")
 
         save_base64_image(processed_image)
-        return processed_image
+        return processed_image,elbow,backward,forward

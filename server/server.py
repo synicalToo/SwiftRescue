@@ -36,10 +36,10 @@ def pose_detection():
     data = request.json
     
     image = data.get("image")
+    elbow,backward,forward=False
+    output_image,elbow,backward,forward = pose_detector.process_image(image)
     
-    output_image = pose_detector.process_image(image)
-    
-    return jsonify({"message": "Landmark detection successful.", "processed_image": output_image})
+    return jsonify({"message": "Landmark detection successful.", "processed_image": output_image,"elbow":elbow,"backward":backward,"forward":forward})
 
 aed_model = YOLO("./aed_ai/runs/detect/train2/weights/best.pt")
 
