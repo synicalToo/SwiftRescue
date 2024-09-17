@@ -27,7 +27,7 @@ def save_base64_image(base64_string: str):
 
     # Generate filename with timestamp
     timestamp = round(time.time())
-    file_path = os.path.join("processed_image", f"{timestamp}.png")
+    file_path = os.path.join("uploads", "processed-image-pose", f"{timestamp}.png")
 
     # Write binary data to file
     with open(file_path, "wb") as f:
