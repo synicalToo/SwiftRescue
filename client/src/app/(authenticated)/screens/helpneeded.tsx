@@ -71,8 +71,11 @@ const HelpNeeded: React.FC = () => {
         <FlatList
           data={sosRequests}
           keyExtractor={(item) => item.id || ''}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleSosRequestPress(item)}>
+          renderItem={({ item, index }) => ( // index を追加
+            <TouchableOpacity style={styles.requestItem} onPress={() => handleSosRequestPress(item)}>
+              <View style={styles.circle}>
+                <Text style={styles.circleText}>{index + 1}</Text>
+              </View>
               <Text style={styles.text}>
                 {item.name ? `${item.name}: \n` : ''}
                 {item.details ? `${item.details} - \n` : ''}
@@ -90,7 +93,8 @@ const HelpNeeded: React.FC = () => {
 const styles = StyleSheet.create({
   saveAreaContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center', //ここと
+    alignItems: 'center',//ここと
   },
   container: {
     flex: 1,
@@ -100,11 +104,47 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 22,
     marginBottom: 10,
+    textAlign: 'center',//ここと
+    color: '#ffffff', //ここと
   },
   separator: {
     height: 4,
     backgroundColor: '#ddd',
   },
+  requestItem: {//こっから
+    paddingTop: 30, 
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    marginTop: 30,
+    marginHorizontal: 15,
+    backgroundColor: '#00bfff',
+    borderRadius: 25, 
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    position: 'relative', 
+  },
+  circle: {
+    position: 'absolute', 
+    top: -15, 
+    left: -10, 
+    width: 45, 
+    height: 45, 
+    borderRadius: 20, 
+    backgroundColor: '#00bfff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#1e90ff',
+    zIndex: 1,
+  },
+  circleText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 25,
+  },//ここまで変更
 });
 
-export default HelpNeeded;
+export default HelpNeeded;

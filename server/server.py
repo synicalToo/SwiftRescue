@@ -5,7 +5,9 @@ from flask import Flask, request, jsonify
 from pose_detection import PoseEstimator
 from fire_detection import process_fire_detection
 from aed_detection import process_aed_detection
-
+bend_elbow = False
+backward=False
+forward=False
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -48,15 +50,16 @@ def aed_detection():
     
     return jsonify({"message": message}, code)
 
-@app.route("/api/v1/pose-detection", methods=["POST"])
+@app.route("/api/v1/CPR", methods=["POST"])
 def pose_detection() -> None:
     data = request.json
     
     image = data.get("image")
     
-    output_image = pose_detector.process_image(image)
-    
-    return jsonify({"message": "Landmark detection successful.", "processed_image": output_image})
+    output_image,bend_elbow,forward,backward = pose_detector.process_image(image)
+    print(bend_elbow)
+    print(forward)
+    return jsonify({"message": "Landmark detection successful.", "processed_image": output_image,"bend_elbow":bend_elbow,"forward":forward,"backward":backward})
 
 if __name__ == "__main__":
     create_directories()

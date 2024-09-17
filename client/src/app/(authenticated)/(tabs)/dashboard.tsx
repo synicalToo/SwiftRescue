@@ -1,12 +1,24 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Button, TouchableOpacity } from "react-native";
-import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Animated,
+  Easing,
+} from "react-native";
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from "@react-navigation/native-stack";
+import React, { useEffect, useRef } from "react";
 import AEDLocs from "../screens/aed-locations";
 import HelpNeeded from "../screens/helpneeded";
 import SOS from "../screens/sos";
 import SOSStatus from "../screens/sosstatus";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Entypo from "@expo/vector-icons/Entypo";
 
 type RootStackParamList = {
   Home: undefined;
@@ -15,78 +27,149 @@ type RootStackParamList = {
   SOS: undefined;
 };
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "Home"
+>;
 
 function Index({ navigation }: { navigation: HomeScreenNavigationProp }) {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const animate = () => {
+      scaleAnim.setValue(1);
+      Animated.sequence([
+        Animated.timing(scaleAnim, {
+          toValue: 1.1,
+          duration: 500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1.1,
+          duration: 500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start(() => animate());
+    };
+
+    animate();
+  }, [scaleAnim]);
+
   return (
-    <SafeAreaView>
-    <View style={styles.button}>
-      <Button
-        title="AED"
-        color="red"
-        onPress={() => navigation.navigate('AEDLocs')}
-      />
+    <SafeAreaView style={styles.background}>
+      <View style={styles.flexBox}>
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={() => navigation.navigate("AEDLocs")}
+        >
+          <MaterialCommunityIcons
+            name="heart-flash"
+            size={40}
+            color="white"
+            style={styles.icon}
+          />
+          <Text style={styles.iconText}>Locate AED</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={() => navigation.navigate("HelpNeeded")}
+        >
+          <Entypo name="location" size={40} color="white" style={styles.icon} />
+          <Text style={styles.iconText}>Help Need</Text>
+        </TouchableOpacity>
       </View>
-      <View style={styles.button}>
-        <Button
-        title="Help Needed Nearby"
-        onPress={() => navigation.navigate('HelpNeeded')}
-      />
+
+      <View >
+        <TouchableOpacity style={[styles.requestSOS, { transform: [{ scale : scaleAnim }] }]} onPress={() => navigation.navigate("SOS")}>
+          <Animated.Text
+            style={[styles.sosText, { transform: [{ scale: scaleAnim }] }]}
+          >
+            {"EMERGENCY"}
+            {"\n"}
+            {"SOS"}
+          </Animated.Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.sosButton} onPress={() => navigation.navigate('SOS') }>
-        <Text style={styles.sosText}>SOS</Text>
-      </TouchableOpacity>
-    
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    paddingHorizontal: 30, // Add horizontal padding
-    paddingVertical: 10, // Add vertical padding
+  background: {
+    backgroundColor: "#f0f0f5", // 明るいグレーで背景を落ち着かせる
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,
   },
-  sosButton: {
-    marginTop: 185,
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+  requestSOS: {
+    backgroundColor: "red",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5, // Androidのための影
+    marginTop: 50,
+    alignItems: "center",
   },
   sosText: {
-    fontSize: 45,
-    color: 'red',
-    textAlign: 'center',
-  }
-})
+    color: "white",
+    textAlign: "center",
+    fontSize: 35, // 少しサイズを調整
+  },
+  flexBox: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 30,
+  },
+  buttonWrapper: {
+    backgroundColor: "#4a90e2", // 鮮やかな青色
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  iconText: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "white",
+    marginTop: 10,
+  },
+  icon: {
+    fontSize: 40,
+  },
+});
 
 const Stack = createNativeStackNavigator();
 
 export default function ButtonNavigation() {
   return (
-        <Stack.Navigator initialRouteName="Index">
-        <Stack.Screen
-          name="Home"
-          component={Index}
-        />
-        <Stack.Screen
-          name="AEDLocs" // Define AedLocs screen
-          component={AEDLocs}
-          options={{ title: 'AED Locations' }}
-        />
-        <Stack.Screen
-          name="HelpNeeded"
-          component={HelpNeeded}
-          options={{ title: 'Help Needed Nearby' }}
-        />
-        <Stack.Screen
-          name="SOS"
-          component={SOS}
-          options={{ title: 'Send SOS signal' }}
-        />
-        <Stack.Screen
-          name="SOSStatus" // for redirection at HN
-          component={SOSStatus}
-        /> 
-        </Stack.Navigator>
+    <Stack.Navigator initialRouteName="Index">
+      <Stack.Screen name="Home" component={Index} />
+      <Stack.Screen
+        name="AEDLocs"
+        component={AEDLocs}
+        options={{ title: "AED Locations" }}
+      />
+      <Stack.Screen
+        name="HelpNeeded"
+        component={HelpNeeded}
+        options={{ title: "Help Needed Nearby" }}
+      />
+      <Stack.Screen
+        name="SOS"
+        component={SOS}
+        options={{ title: "Send SOS signal" }}
+      />
+      <Stack.Screen name="SOSStatus" component={SOSStatus} />
+    </Stack.Navigator>
   );
 }

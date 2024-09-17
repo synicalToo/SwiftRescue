@@ -40,6 +40,9 @@ class PoseEstimator:
         # Recolor image to RGB
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image_rgb.flags.writeable = False
+        bend_elbow=False
+        backward=False
+        forward=False
         # Make detection
         results = self.pose.process(image_rgb)
         # Recolor back to BGR
@@ -149,16 +152,22 @@ class PoseEstimator:
             feedback = []
             if left_elbow_angle <= 150:
                 feedback.append("Don't bend your left elbow")
+                bend_elbow=True
             if left_knee_angle <= 40:
                 feedback.append("Move forward")
+                forward=True
             if left_knee_angle >= 70:
                 feedback.append("Move backward")
+                backward=True
             if right_elbow_angle <= 150:
                 feedback.append("Don't bend your right elbow")
+                bend_elbow=True
             if right_knee_angle <= 40:
                 feedback.append("Move forward")
+                forward=True
             if right_knee_angle > 70:
                 feedback.append("Move backward")
+                backward=True
             # Visualize angles and provide feedback
             feedback = []
             if left_elbow_angle <= 150:
@@ -204,4 +213,4 @@ class PoseEstimator:
             print("Error: Image encoding failed.")
 
         save_base64_image(processed_image)
-        return processed_image
+        return processed_image,bend_elbow,forward,backward
