@@ -16,13 +16,15 @@ import {
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 
-export default function Page() {
+export default function FireDetectionPage() {
   const isFocused = useIsFocused();
   const cameraRef = useRef<CameraView>(null);
   const [processing, setProcessing] = useState(false);
   const [facing, setFacing] = useState<CameraType>("back");
   const [hasPermission, requestPermission] = useCameraPermissions();
-  const { data, errorMsg, loading, postData } = usePost("/api/v1/fire-detection");
+  const { data, errorMsg, loading, postData } = usePost(
+    "/api/v1/fire-detection"
+  );
 
   let cameraOptions = {
     quality: 1,
@@ -83,7 +85,7 @@ export default function Page() {
     if (cameraRef.current) {
       try {
         await cameraRef.current.pausePreview;
-      } catch (error) { }
+      } catch (error) {}
     }
     router.replace("/(authenticated)/(tabs)/dashboard");
   }
